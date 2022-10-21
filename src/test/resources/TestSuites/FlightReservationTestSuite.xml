@@ -3,7 +3,7 @@
 <suite name="FlightReservationTestSuite" verbose="1">
 
 	<test name="FlightReservationTests-Ch">
-	    <parameter name="browser" value="edge"></parameter>
+	    <parameter name="browser" value="chrome"></parameter>
 		<classes>
 			<class name="com.project.automation.united.homepagetests.ReservationTest"/>
 		</classes>
