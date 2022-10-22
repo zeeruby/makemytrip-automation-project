@@ -16,34 +16,43 @@ public class HomePage extends BasePage {
 	public static String pageUrl = "https://www.makemytrip.com/?ccde=us";
 	// identify parent element with ./.. expression in xpath
 	// parent.findElements(By.xpath("./child::*"))
+	// path=//tagname[contains(@Attribute,‘Value’)]
 	private By fromCityLocator = (By.id("fromCity"));
 	private By toCityLocator = (By.id("toCity"));
 	private By originLocator = By.xpath("//input[@placeholder='From']");
 	private By destinationLocator = (By.xpath("//input[@placeholder='To']"));
 	private By suggestionsBoxLocator = (By.xpath("//p[contains(text(),'SUGGESTIONS')]"));
-	//private By destinationOptionsLocator = By.xpath("//li[contains(@id, 'react-autowhatever-1-section-0-item-')]/div/div/p[1]");
-	private By originOptionsLocator = By.xpath("//li[contains(@id,'react-autowhatever-1-section-0-item')]"); 
-	// path=//tagname[contains(@Attribute,‘Value’)]
-	//private By passengerSelectorModalLocator = By.xpath("//*[@id='passengerSelector']/button");
+	private By originOptionsLocator = By.xpath("//li[contains(@id,'react-autowhatever-1-section-0-item')]");
+	private By travellersAndClassLocator = By.xpath("//span[@class='lbl_input latoBold appendBottom5']");
+	private By selectAdultsLocator = By.xpath("//li[contains(@data-cy,'adult')]");
+	private By selectChildrenLocator = By.xpath("//li[contains(@data-cy,'children')]");
+	private By selectInfantsLocator = By.xpath("//li[contains(@data-cy,'infant')]");
+	private By travellerClassLocator = By.xpath("//ul[@class='guestCounter classSelect font12 darkText']/li");
+	private By applyButton = By.xpath("//button[@data-cy =travellerApplyBtn']");
+	private By totalTravellerNumberLocator = By.xpath("//label[@for='travellers']/descendant::p[1]");
 
 	public HomePage(WebDriver driver, Logger log) {
 		super(driver, log);
 	}
 
+	//open url
 	public void openPageUrl() {
 		openPage(pageUrl);
 	}
 
+	//finding actual origin
 	public String getOrigin() {
 		return find(fromCityLocator).getAttribute("value").toLowerCase();
-		
-		
-	}
-	public String getDestination() {
-		return find(toCityLocator).getAttribute("value").toLowerCase();
-		
+
 	}
 
+	////finding actual destination
+	public String getDestination() {
+		return find(toCityLocator).getAttribute("value").toLowerCase();
+
+	}
+
+	//open the selector for origin selection
 	private void getOriginSelector(String originStr) throws InterruptedException {
 		find(fromCityLocator).click();
 		WebElement elem = find(originLocator);
@@ -51,7 +60,8 @@ public class HomePage extends BasePage {
 		elem.sendKeys(originStr);
 		Thread.sleep(3000);
 	}
-
+	
+    //Select desired origin
 	public void selectOrigin(String originStr, String origin) throws InterruptedException {
 		getOriginSelector(originStr);
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
@@ -59,17 +69,14 @@ public class HomePage extends BasePage {
 				.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(originOptionsLocator));
 		for (WebElement option : originOptions) {
 			String optionText = option.getText().toLowerCase();
-			System.out.println(optionText + "this is option text");
 			if (optionText.contains(origin)) {
 				option.click();
-				//System.out.println(optionText + "this is origin option clicked");
 				break;
-			}else {
-				System.out.println("nothing matches");
-			}
+			} 
 		}
 	}
 
+	//open destination options selector
 	private void getDestinationSelector(String destinationStr) throws InterruptedException {
 		WebElement elem = find(destinationLocator);
 		elem.click();
@@ -77,7 +84,8 @@ public class HomePage extends BasePage {
 		elem.sendKeys(destinationStr);
 		Thread.sleep(3000);
 	}
-   
+    
+	//Select destination
 	public void selectDestination(String destinationStr, String destination) throws InterruptedException {
 		getDestinationSelector(destinationStr);
 		waitForVisibilityOf(suggestionsBoxLocator, Duration.ofSeconds(20));
@@ -86,20 +94,82 @@ public class HomePage extends BasePage {
 				.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(originOptionsLocator));
 		for (WebElement option : destinationOptions) {
 			if (option.getText().toLowerCase().contains(destination)) {
-				System.out.println(option.getText().toLowerCase() + "this is destination option");
 				option.click();
-				//System.out.println(option.getText().toLowerCase() + "this is destination option clicked");
-				Thread.sleep(3000);
 				break;
 			}
 		}
 
 	}
+    
+	//Add desired number of adults
+	public String addAdults(String desiredAdultNumber) {
+		String currentAdultsNumber ="0";
+		waitForVisibilityOf(travellersAndClassLocator, Duration.ofSeconds(20));
+		find(travellersAndClassLocator).click();
+		List<WebElement> adultsCounter = findAll(selectAdultsLocator);
+		for (WebElement adult : adultsCounter) {
+			if (adult.getAttribute("data-cy").contains(desiredAdultNumber)) {
+				adult.click();
+				currentAdultsNumber= adult.getAttribute("data-cy");
+				
+			}
+		}
+		return currentAdultsNumber;
+	}
 
-	/*
-	 * public PassengerSelectorModal getPassengerSelectorModal() {
-	 * find(passengerSelectorModalLocator).click(); return new
-	 * PassengerSelectorModal(driver, log); }
-	 */
+	//Add desired number of children	
+	public String addChildren(String desiredChildrenNumber) {
+		String currentChildrenNumber ="0";
+		List<WebElement> childrensCounter = findAll(selectChildrenLocator);
+		for (WebElement child : childrensCounter) {
+			if (child.getAttribute("data-cy").contains(desiredChildrenNumber)) {
+				child.click();
+				currentChildrenNumber= child.getAttribute("data-cy");
+				break;
+			}
+		}
+		return currentChildrenNumber;
+	}
+    
+	////Add desired number of infants
+	public String addInfants(String desiredInfantNumber) {
+		String currentInfantNumber ="0";
+		List<WebElement> infantsCounter = findAll(selectInfantsLocator);
+		for (WebElement infant : infantsCounter) {
+			if (infant.getAttribute("data-cy").contains(desiredInfantNumber)) {
+				infant.click();
+				currentInfantNumber= infant.getAttribute("data-cy");
+				break;
+			}
+		}
+		return currentInfantNumber;
+	}
+    
+	//Select travel class
+	public String selectTravellerClass(String desiredTravellerClass) {
+		String actualTravellerClass= "";
+    	List<WebElement> travellerClassList = findAll(travellerClassLocator);
+    	for(WebElement travellerClass:travellerClassList) {
+    		if(travellerClass.getText().toLowerCase().equals(desiredTravellerClass)){
+    			travellerClass.click();
+    			actualTravellerClass= travellerClass.getText().toLowerCase();
+    			break;
+    		}
+    	}
+    	return actualTravellerClass;
+    }
+
+	//press apply button after selecting travellers and their class
+	public void applyTravelerNumberAndClass() {
+		find(applyButton).click();
+	}
+
+	// get the actual total number to assert
+	public String getTotalTravellersNumber() {
+		WebElement totalTravellersNumber = find(totalTravellerNumberLocator);
+		String actualTotalTravellerNumber= totalTravellersNumber.getText().split(" ")[0];
+		
+		return actualTotalTravellerNumber;
+	}
 
 }

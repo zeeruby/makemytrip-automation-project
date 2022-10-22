@@ -23,7 +23,7 @@ public class BaseTest {
 		log= LogManager.getLogger(testName);
 		BrowserDriverFactory factory = new BrowserDriverFactory(browser,log);
 		driver= factory.createDriver();
-    	//driver.manage().window().maximize();
+    	driver.manage().window().maximize();
     	driver.manage().deleteAllCookies();
     	driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(TestUtils.PAGE_LOAD_TIME));
     }
