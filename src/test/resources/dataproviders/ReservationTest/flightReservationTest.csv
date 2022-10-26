@@ -1,4 +1,4 @@
-number,desiredOriginStr,desiredOrigin,desiredDestinationStr,desiredDestination,Adults (18 - 64),Seniors (65+),Infants (Under 2),Infants on lap,Children (15 - 17),Children (12 - 14),Children (5 - 11),Children (2 - 4),Total Travellers,waitForClickability
-1,san,san jose,wash,washington-dul,0,2,2,0,0,0,0,0,4,30
-2,san,san jose,wash,washington-dul,1,2,3,0,0,0,0,0,6,30
-3,dall,fort wor,orla,orlando,1,1,0,0,0,2,2,1,7,30
+number,desiredOriginStr,desiredOrigin,desiredDestinationStr,desiredDestination,desiredAdultNumber,desiredChildrenNumber,desiredInfantNumber,desiredTravellerClass,Infants on lap,Children (15 - 17),Children (12 - 14),Children (5 - 11),Children (2 - 4),desiredTotalTravellers,waitForClickability
+1,san,san jose,wash,washington-dul,1,2,2,economy/premium economy,0,0,0,0,0,5,30
+2,san,san jose,wash,washington-dul,1,2,3,premium economy,0,0,0,0,0,6,30
+3,dall,fort wor,orla,orlando,1,1,0,business,0,0,2,2,1,2,30
